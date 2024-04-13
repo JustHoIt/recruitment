@@ -1,7 +1,7 @@
 package com.example.recruitment.entity;
 
+import com.example.recruitment.dto.RecruitmentDto;
 import com.example.recruitment.enums.RecruitmentStatus;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -52,5 +52,18 @@ public class Recruitment {
         this.status = RecruitmentStatus.OPEN;
     }
 
-
+    public RecruitmentDto.Response toDto() {
+        return RecruitmentDto.Response.builder()
+                .recruitmentId(this.id)
+                .title(this.title)
+                .recruiterCount(this.recruiterCount)
+                .description(this.description)
+                .status(this.status)
+                .modifyDate(this.modifyDate)
+                .postingDate(this.postingDate)
+                .closingDate(this.closingDate)
+                .companyMemberId(this.companyMember.getId())
+                .companyName(this.companyMember.getCompanyName())
+                .build();
+    }
 }

@@ -3,12 +3,15 @@ package com.example.recruitment.service;
 import com.example.recruitment.dto.RecruitmentDto;
 import com.example.recruitment.entity.CompanyMember;
 import com.example.recruitment.entity.Recruitment;
+import com.example.recruitment.enums.RecruitmentStatus;
 import com.example.recruitment.repository.CompanyMemberRepository;
 import com.example.recruitment.repository.RecruitmentRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,5 +30,17 @@ public class RecruitmentService {
         recruitment.opening();
 
         recruitmentRepository.save(recruitment);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RecruitmentDto.Response> getRecruitmentList() {
+        List<Recruitment> recruitments = recruitmentRepository.findAllByStatus(RecruitmentStatus.OPEN);
+        return recruitments.stream().map(Recruitment::toDto).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public RecruitmentDto.Response getRecruitment(Long recruitId) {
+        return recruitmentRepository.findById(recruitId)
+                .orElseThrow(() -> new RuntimeException("존재 하지 않는 공고입니다.")).toDto();
     }
 }
