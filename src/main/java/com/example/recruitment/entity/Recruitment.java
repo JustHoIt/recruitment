@@ -1,9 +1,9 @@
 package com.example.recruitment.entity;
 
 import com.example.recruitment.enums.RecruitmentStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Recruitment {
 
     @Id
@@ -31,6 +33,24 @@ public class Recruitment {
     private LocalDateTime modifyDate; //채용 수정일
     @CreationTimestamp
     private LocalDateTime postingDate; //채용 공고일
+
+
+    @Builder
+    public Recruitment(
+            String title,  // 공고명
+            Integer recruiterCount, //모집 인원
+            String description, //공고 설명
+            LocalDateTime closingDate //채용 종료일
+    ) {
+        this.title = title;
+        this.recruiterCount = recruiterCount;
+        this.description = description;
+        this.closingDate = closingDate;
+    }
+
+    public void opening() {
+        this.status = RecruitmentStatus.OPEN;
+    }
 
 
 }
