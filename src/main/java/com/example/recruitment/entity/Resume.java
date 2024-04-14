@@ -3,10 +3,7 @@ package com.example.recruitment.entity;
 import com.example.recruitment.enums.ResumeStatus;
 import com.example.recruitment.utils.EducationListJsonConverter;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -33,10 +30,25 @@ public class Resume {
     @Column(columnDefinition = "TEXT")
     private List<Education> educationList; //학력
     @Enumerated(EnumType.STRING)
-    private ResumeStatus Status; //이력서 상태
+    private ResumeStatus status; //이력서 상태
     @UpdateTimestamp
     private LocalDateTime modifyDate; //채용 수정일
     @CreationTimestamp
     private LocalDateTime postingDate; //채용 공고일
+
+    @Builder
+    Resume(
+            String title,
+            List<Education> educationList,
+            String description
+    ) {
+        this.title = title;
+        this.educationList = educationList;
+        this.description = description;
+    }
+
+    public void open() {
+        this.status = ResumeStatus.OPEN;
+    }
 
 }
