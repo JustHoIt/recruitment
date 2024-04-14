@@ -1,6 +1,6 @@
 package com.example.recruitment.entity;
 
-import com.example.recruitment.dto.RecruitmentDto;
+import com.example.recruitment.dto.RecruitmentDTO;
 import com.example.recruitment.enums.RecruitmentStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -52,8 +52,8 @@ public class Recruitment {
         this.status = RecruitmentStatus.OPEN;
     }
 
-    public RecruitmentDto.Response toDto() {
-        return RecruitmentDto.Response.builder()
+    public RecruitmentDTO.Response toDto() {
+        return RecruitmentDTO.Response.builder()
                 .recruitmentId(this.id)
                 .title(this.title)
                 .recruiterCount(this.recruiterCount)
@@ -67,7 +67,7 @@ public class Recruitment {
                 .build();
     }
 
-    public Recruitment update(RecruitmentDto.Request request) {
+    public Recruitment update(RecruitmentDTO.Request request) {
         this.title = request.title();
         this.recruiterCount = request.recruiterCount();
         this.description = request.description();

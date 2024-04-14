@@ -9,7 +9,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-public class RecruitmentDto {
+public class RecruitmentDTO {
     public record Request(
             String title,  // 공고명
             Integer recruiterCount, //모집 인원

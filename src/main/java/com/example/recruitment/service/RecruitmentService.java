@@ -1,6 +1,6 @@
 package com.example.recruitment.service;
 
-import com.example.recruitment.dto.RecruitmentDto;
+import com.example.recruitment.dto.RecruitmentDTO;
 import com.example.recruitment.entity.CompanyMember;
 import com.example.recruitment.entity.Recruitment;
 import com.example.recruitment.enums.RecruitmentStatus;
@@ -22,7 +22,7 @@ public class RecruitmentService {
     private final CompanyMemberRepository companyMemberRepository;
 
     @Transactional
-    public void postingRecruitment(RecruitmentDto.Request request) {
+    public void postingRecruitment(RecruitmentDTO.Request request) {
         CompanyMember companyMember = companyMemberRepository.findByLoginId(request.companyMemberId())
                 .orElseThrow(() -> new RuntimeException("기업 회원 정보 없음"));
 
@@ -34,19 +34,19 @@ public class RecruitmentService {
     }
 
     @Transactional(readOnly = true)
-    public List<RecruitmentDto.Response> getRecruitmentList() {
+    public List<RecruitmentDTO.Response> getRecruitmentList() {
         List<Recruitment> recruitments = recruitmentRepository.findAllByStatus(RecruitmentStatus.OPEN);
         return recruitments.stream().map(Recruitment::toDto).toList();
     }
 
     @Transactional(readOnly = true)
-    public RecruitmentDto.Response getRecruitment(Long recruitId) {
+    public RecruitmentDTO.Response getRecruitment(Long recruitId) {
         return recruitmentRepository.findById(recruitId)
                 .orElseThrow(() -> new RuntimeException("존재 하지 않는 공고입니다.")).toDto();
     }
 
     @Transactional
-    public RecruitmentDto.Response modifyRecruitmet(Long recruitId, RecruitmentDto.Request request) {
+    public RecruitmentDTO.Response modifyRecruitmet(Long recruitId, RecruitmentDTO.Request request) {
         Recruitment recruitment = recruitmentRepository.findById(recruitId)
                 .orElseThrow(() -> new RuntimeException("존재 하지 않는 공고입니다."));
 
@@ -59,7 +59,7 @@ public class RecruitmentService {
 
 
     @Transactional
-    public void deleteRecruitment(Long recruitId, RecruitmentDto.Request request) {
+    public void deleteRecruitment(Long recruitId, RecruitmentDTO.Request request) {
         Recruitment recruitment = recruitmentRepository.findById(recruitId)
                 .orElseThrow(() -> new RuntimeException("존재 하지 않는 공고입니다."));
 

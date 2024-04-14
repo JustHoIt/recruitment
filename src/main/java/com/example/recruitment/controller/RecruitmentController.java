@@ -1,6 +1,6 @@
 package com.example.recruitment.controller;
 
-import com.example.recruitment.dto.RecruitmentDto;
+import com.example.recruitment.dto.RecruitmentDTO;
 import com.example.recruitment.service.RecruitmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,33 +11,33 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/recruitments")
+@RequestMapping(value = "/recruitments")
 public class RecruitmentController {
     private final RecruitmentService recruitmentService;
 
     @PostMapping("/post")
-    public void postingRecruitment(@RequestBody RecruitmentDto.Request request) {
+    public void postingRecruitment(@RequestBody RecruitmentDTO.Request request) {
         recruitmentService.postingRecruitment(request);
     }
 
     @GetMapping("")
-    public List<RecruitmentDto.Response> getRecruitmentList() {
+    public List<RecruitmentDTO.Response> getRecruitmentList() {
         return recruitmentService.getRecruitmentList();
     }
 
     @GetMapping("/{id}")
-    public RecruitmentDto.Response getRecruitment(@PathVariable(name = "id") Long recruitId) {
+    public RecruitmentDTO.Response getRecruitment(@PathVariable(name = "id") Long recruitId) {
         return recruitmentService.getRecruitment(recruitId);
     }
 
     @PutMapping("/{id}")
-    public RecruitmentDto.Response modifyRecruitment(@PathVariable(name = "id") Long recruitId,
-                                                     @RequestBody RecruitmentDto.Request request) {
+    public RecruitmentDTO.Response modifyRecruitment(@PathVariable(name = "id") Long recruitId,
+                                                     @RequestBody RecruitmentDTO.Request request) {
         return recruitmentService.modifyRecruitmet(recruitId, request);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRecruitment(@PathVariable(name = "id") Long recruitId, @RequestBody RecruitmentDto.Request request){
+    public void deleteRecruitment(@PathVariable(name = "id") Long recruitId, @RequestBody RecruitmentDTO.Request request) {
 
         recruitmentService.deleteRecruitment(recruitId, request);
     }
