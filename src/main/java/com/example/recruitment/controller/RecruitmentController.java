@@ -35,4 +35,10 @@ public class RecruitmentController {
                                                      @RequestBody RecruitmentDto.Request request) {
         return recruitmentService.modifyRecruitmet(recruitId, request);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteRecruitment(@PathVariable(name = "id") Long recruitId, @RequestBody RecruitmentDto.Request request){
+
+        recruitmentService.deleteRecruitment(recruitId, request);
+    }
 }

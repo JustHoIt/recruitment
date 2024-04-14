@@ -56,4 +56,18 @@ public class RecruitmentService {
 
         return recruitment.update(request).toDto();
     }
+
+
+    @Transactional
+    public void deleteRecruitment(Long recruitId, RecruitmentDto.Request request) {
+        Recruitment recruitment = recruitmentRepository.findById(recruitId)
+                .orElseThrow(() -> new RuntimeException("존재 하지 않는 공고입니다."));
+
+        // 파라미터인 DTO의 request가 아닌 토큰 값을 이용해서 예외처리를 하나 이번에는 회원정보가 더미데이터이기때문에 임시방편으로 구현
+        if (!Objects.equals(recruitment.getCompanyMember().getLoginId(), request.companyMemberId())) {
+            throw new RuntimeException("해당 공고 작성자와 일치하지 않습니다.");
+        }
+
+        recruitmentRepository.deleteById(recruitId);
+    }
 }
