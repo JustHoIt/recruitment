@@ -1,5 +1,6 @@
 package com.example.recruitment.controller;
 
+import com.example.recruitment.dto.ApplicationDTO;
 import com.example.recruitment.dto.RecruitmentDTO;
 import com.example.recruitment.service.RecruitmentService;
 import lombok.RequiredArgsConstructor;
@@ -40,5 +41,11 @@ public class RecruitmentController {
     public void deleteRecruitment(@PathVariable(name = "id") Long recruitId, @RequestBody RecruitmentDTO.Request request) {
 
         recruitmentService.deleteRecruitment(recruitId, request);
+    }
+
+    @PostMapping("/{id}/applications")
+    public void applyRecruitment(@PathVariable(name = "id") Long recruitId, @RequestBody ApplicationDTO.Request request) {
+
+        recruitmentService.applyRecruitment(recruitId, request);
     }
 }

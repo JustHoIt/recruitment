@@ -1,11 +1,17 @@
 package com.example.recruitment.service;
 
+import com.example.recruitment.dto.ApplicationDTO;
 import com.example.recruitment.dto.RecruitmentDTO;
+import com.example.recruitment.entity.Application;
 import com.example.recruitment.entity.CompanyMember;
 import com.example.recruitment.entity.Recruitment;
+import com.example.recruitment.entity.Resume;
+import com.example.recruitment.enums.ApplicationStatus;
 import com.example.recruitment.enums.RecruitmentStatus;
+import com.example.recruitment.repository.ApplicationRepository;
 import com.example.recruitment.repository.CompanyMemberRepository;
 import com.example.recruitment.repository.RecruitmentRepository;
+import com.example.recruitment.repository.ResumeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +26,8 @@ import java.util.Objects;
 public class RecruitmentService {
     private final RecruitmentRepository recruitmentRepository;
     private final CompanyMemberRepository companyMemberRepository;
+    private final ResumeRepository resumeRepository;
+    private final ApplicationRepository applicationRepository;
 
     @Transactional
     public void postingRecruitment(RecruitmentDTO.Request request) {
@@ -69,5 +77,22 @@ public class RecruitmentService {
         }
 
         recruitmentRepository.deleteById(recruitId);
+    }
+
+
+    @Transactional
+    public void applyRecruitment(Long recruitId, ApplicationDTO.Request request) {
+
+        Resume resume = resumeRepository.findByIdAndMemberId(request.resumeId(), request.memberId())
+                .orElseThrow(() -> new RuntimeException("이력서 정보를 찾을 수 없습니다."));
+
+        Recruitment recruitment = recruitmentRepository.findByIdAndStatus(recruitId, RecruitmentStatus.OPEN)
+                .orElseThrow(() -> new RuntimeException("해당하는 공고 없음"));
+
+
+        Application application = Application.builder().recruitment(recruitment).resume(resume)
+                .status(ApplicationStatus.APPLY_FINISHED).build();
+
+        applicationRepository.save(application);
     }
 }

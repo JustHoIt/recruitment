@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 @Component
 @RequiredArgsConstructor
 public class DataInit {
-    //
+
 //    private final MemberRepository memberRepository;
 //    private final CompanyMemberRepository companyMemberRepository;
 //

@@ -18,7 +18,7 @@ public class Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "resume_id")
-    private long resumeId; //고유 식별 ID
+    private long id; //고유 식별 ID
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
