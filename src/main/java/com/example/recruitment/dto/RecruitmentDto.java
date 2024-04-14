@@ -16,7 +16,8 @@ public class RecruitmentDto {
             String description, //공고 설명
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
             LocalDateTime closingDate, //채용 종료일
-            String companyMemberId
+            String companyMemberId,
+            RecruitmentStatus status
     ) {
         public Recruitment toEntity() {
             return Recruitment.builder()

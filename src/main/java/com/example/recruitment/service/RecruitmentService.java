@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -42,5 +43,17 @@ public class RecruitmentService {
     public RecruitmentDto.Response getRecruitment(Long recruitId) {
         return recruitmentRepository.findById(recruitId)
                 .orElseThrow(() -> new RuntimeException("존재 하지 않는 공고입니다.")).toDto();
+    }
+
+    @Transactional
+    public RecruitmentDto.Response modifyRecruitmet(Long recruitId, RecruitmentDto.Request request) {
+        Recruitment recruitment = recruitmentRepository.findById(recruitId)
+                .orElseThrow(() -> new RuntimeException("존재 하지 않는 공고입니다."));
+
+        if (!Objects.equals(recruitment.getCompanyMember().getLoginId(), request.companyMemberId())) {
+            throw new RuntimeException("해당 공고 작성자와 일치하지 않습니다.");
+        }
+
+        return recruitment.update(request).toDto();
     }
 }
