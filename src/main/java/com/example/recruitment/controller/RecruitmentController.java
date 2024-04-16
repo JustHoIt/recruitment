@@ -48,4 +48,10 @@ public class RecruitmentController {
 
         recruitmentService.applyRecruitment(recruitId, request);
     }
+
+    @GetMapping("/{id}/applications")
+    public List<ApplicationDTO.Response> getApplications(@PathVariable(name = "id") Long recruitmentId,
+                                                         @RequestParam(name = "companyMemberId") Long companyMemberId) {
+        return recruitmentService.getApplications(recruitmentId, companyMemberId);
+    }
 }

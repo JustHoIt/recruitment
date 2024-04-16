@@ -65,7 +65,6 @@ public class RecruitmentService {
         return recruitment.update(request).toDto();
     }
 
-
     @Transactional
     public void deleteRecruitment(Long recruitId, RecruitmentDTO.Request request) {
         Recruitment recruitment = recruitmentRepository.findById(recruitId)
@@ -78,7 +77,6 @@ public class RecruitmentService {
 
         recruitmentRepository.deleteById(recruitId);
     }
-
 
     @Transactional
     public void applyRecruitment(Long recruitId, ApplicationDTO.Request request) {
@@ -94,5 +92,22 @@ public class RecruitmentService {
                 .status(ApplicationStatus.APPLY_FINISHED).build();
 
         applicationRepository.save(application);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ApplicationDTO.Response> getApplications(Long recruitmentId, Long companyMemberId) {
+        CompanyMember companyMember = companyMemberRepository.findById(companyMemberId)
+                .orElseThrow(() -> new RuntimeException("기업 회원 정보 없음"));
+        List<Application> applicationList = applicationRepository.findAllByRecruitmentId(recruitmentId);
+
+        return applicationList.stream().map(a -> ApplicationDTO.Response.builder()
+                .applicationId(a.getId())
+                .status(a.getStatus())
+                .appliedDate(a.getAppliedDate())
+                .resumeId(a.getResume().getId())
+                .resumeTitle(a.getResume().getTitle())
+                .educationList(a.getResume().getEducationList())
+                .name(a.getResume().getMember().getName())
+                .build()).toList();
     }
 }
