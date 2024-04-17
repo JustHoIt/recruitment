@@ -39,4 +39,12 @@ public class Application {
         this.recruitment = recruitment;
         this.status = status;
     }
+
+    public void pass() {
+        this.status = ApplicationStatus.PASS;
+    }
+
+    public void fail() {
+        this.status = ApplicationStatus.FAIL;
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.recruitment.controller;
 
 import com.example.recruitment.dto.ApplicationDTO;
+import com.example.recruitment.dto.FinishedDTO;
 import com.example.recruitment.dto.RecruitmentDTO;
 import com.example.recruitment.service.RecruitmentService;
 import lombok.RequiredArgsConstructor;
@@ -53,5 +54,11 @@ public class RecruitmentController {
     public List<ApplicationDTO.Response> getApplications(@PathVariable(name = "id") Long recruitmentId,
                                                          @RequestParam(name = "companyMemberId") Long companyMemberId) {
         return recruitmentService.getApplications(recruitmentId, companyMemberId);
+    }
+
+    @PostMapping("/{id}/finished")
+    public void finishedRecruitment(@PathVariable(name = "id") Long recruitmentId,
+                                    @RequestBody FinishedDTO request) {
+        recruitmentService.finishedRecruitment(recruitmentId, request.getCompanyMemberId());
     }
 }

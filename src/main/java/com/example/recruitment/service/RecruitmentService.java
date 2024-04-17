@@ -1,12 +1,11 @@
 package com.example.recruitment.service;
 
+import com.example.recruitment.dto.ApplicantInfo;
 import com.example.recruitment.dto.ApplicationDTO;
 import com.example.recruitment.dto.RecruitmentDTO;
-import com.example.recruitment.entity.Application;
-import com.example.recruitment.entity.CompanyMember;
-import com.example.recruitment.entity.Recruitment;
-import com.example.recruitment.entity.Resume;
+import com.example.recruitment.entity.*;
 import com.example.recruitment.enums.ApplicationStatus;
+import com.example.recruitment.enums.EducationLevel;
 import com.example.recruitment.enums.RecruitmentStatus;
 import com.example.recruitment.repository.ApplicationRepository;
 import com.example.recruitment.repository.CompanyMemberRepository;
@@ -17,8 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -109,5 +112,35 @@ public class RecruitmentService {
                 .educationList(a.getResume().getEducationList())
                 .name(a.getResume().getMember().getName())
                 .build()).toList();
+    }
+
+    @Transactional
+    public void finishedRecruitment(Long recruitmentId, Long companyMemberId) {
+        Recruitment recruitment = recruitmentRepository
+                .findByIdAndStatusAndCompanyMemberId(recruitmentId, RecruitmentStatus.OPEN, companyMemberId)
+                .orElseThrow(() -> new RuntimeException("공고 정보 없음"));
+
+        recruitment.closing();
+
+        List<Application> applicationList = recruitment.getApplicationList();
+
+        //
+        List<ApplicantInfo> applicantInfoList = applicationList.stream().map(Application::getResume).map(r -> {
+            Education education = r.getEducationList().stream().max(Comparator.comparing(Education::getDegree))
+                    .orElse(Education.builder().build());
+
+            return new ApplicantInfo(r.getId(), EducationLevel.findByCode(education.getCode()).getScore(education.getDegree()));
+        }).sorted(Comparator.comparing(ApplicantInfo::getScore).reversed()).toList();
+
+        Map<Long, Integer> applicantInfoMap = IntStream.range(0, applicantInfoList.size()).boxed()
+                .collect(Collectors.toMap(i -> applicantInfoList.get(i).getResumeId(), i -> i));
+
+        applicationList.forEach(application -> {
+            if (applicantInfoMap.get(application.getResume().getId()) < recruitment.getRecruiterCount()) {
+                application.pass();
+            } else {
+                application.fail();
+            }
+        });
     }
 }

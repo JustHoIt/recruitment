@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,6 +21,8 @@ public class Recruitment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recruitment_id")
     private long id;    //고유 식별 ID
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "recruitment")
+    private List<Application> applicationList; // 기업회원 아이디
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_member_id")
     private CompanyMember companyMember; // 기업회원 아이디
@@ -52,6 +55,10 @@ public class Recruitment {
         this.status = RecruitmentStatus.OPEN;
     }
 
+    public void closing() {
+        this.status = RecruitmentStatus.CLOSE;
+    }
+
     public RecruitmentDTO.Response toDto() {
         return RecruitmentDTO.Response.builder()
                 .recruitmentId(this.id)
@@ -76,4 +83,5 @@ public class Recruitment {
 
         return this;
     }
+
 }
